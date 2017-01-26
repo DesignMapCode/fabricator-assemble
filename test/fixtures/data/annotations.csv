@@ -1,0 +1,38 @@
+[
+ {
+   "FIELD1": "",
+   "FIELD2": "Color",
+   "FIELD3": "Color Accessibility",
+   "FIELD4": "Color contrast\n(WCAG) 2.0 - https://www.w3.org/TR/WCAG20/\n- small text 4.5:1 \n- large text 3:1"
+ },
+ {
+   "FIELD1": "",
+   "FIELD2": "",
+   "FIELD3": "Primary",
+   "FIELD4": "Primary colors represent the Trinet brand. Primary colors should consist of less than 10% of the color spectrum on the page at any given time. They are applied primarily to main interactive elements such as primary button and input form elements."
+ },
+ {
+   "FIELD1": "",
+   "FIELD2": "",
+   "FIELD3": "Secondary",
+   "FIELD4": "Secondary colors complement the primary colors. They are used as responses to user interaction such as hover states, or highlights  on information."
+ },
+ {
+   "FIELD1": "",
+   "FIELD2": "",
+   "FIELD3": "Status",
+   "FIELD4": "Status colors communicates status information. They can be used in text, icons, input elements border and banners."
+ },
+ {
+   "FIELD1": "",
+   "FIELD2": "",
+   "FIELD3": "Greys",
+   "FIELD4": "Greys should consist of 90% of the color spectrum on the page at any given time. They are applied primarily to background and text elements."
+ },
+ {
+   "FIELD1": "",
+   "FIELD2": "",
+   "FIELD3": "Gradients",
+   "FIELD4": "Gradients are used in charts instead of solid colors. Charts can use any number of gradients necessary. A chart legend or label should be included when more than one color are used."
+ }
+]

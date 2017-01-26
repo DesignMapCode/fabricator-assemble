@@ -12,6 +12,7 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 var sortObj = require('sort-object');
 var yaml = require('js-yaml');
+var csv = require('csvtojson');
 
 
 /**
@@ -53,7 +54,7 @@ var defaults = {
 	 * JSON or YAML data models that are piped into views
 	 * @type {(String|Array)}
 	 */
-	data: ['src/data/**/*.{json,yml}'],
+	data: ['src/data/**/*.{json,yml,csv}'],
 
 	/**
 	 * Markdown files containing toolkit-wide documentation
@@ -150,7 +151,6 @@ var assembly = {
 	docs: {}
 };
 
-
 /**
  * Get the name of a file (minus extension) from a path
  * @param  {String} filePath
@@ -222,7 +222,6 @@ var handleError = function (e) {
  * @return {Object}
  */
 var buildContext = function (data, hash) {
-
 	// set keys to whatever is defined
 	var materials = {};
 	materials[options.keys.materials] = assembly.materials;
@@ -236,6 +235,7 @@ var buildContext = function (data, hash) {
 	return _.assign({}, data, assembly.data, assembly.materialData, materials, views, docs, hash);
 
 };
+
 
 
 /**
@@ -309,6 +309,23 @@ var parseMaterials = function () {
 
 	});
 
+	var annotate = function (element) {
+		var text = ''
+		if (element) {
+			// console.log(element,'el');
+			_.each(assembly.data.annotations, function(d) {
+				if (d.FIELD3 === element) {
+          // console.log(d.FIELD4);
+					text = d.FIELD4;
+					// return 'test';
+				}
+			})
+			return text;
+		}else {
+			return '';
+		}
+	}
+
 
 	// iterate over each file (material)
 	files.forEach(function (file) {
@@ -323,7 +340,10 @@ var parseMaterials = function () {
 		var key = (isSubCollection) ? collection + '.' + getName(file, true) : getName(file, true);
 
 		// get material front-matter, omit `notes` and `annotations`
-		var localData = _.omit(fileMatter.data, ['notes', 'annotations']);
+		var localData = _.omit(fileMatter.data, ['notes']);
+
+    // console.log(annotate(fileMatter.data['annotate-element']));
+    // annotate(fileMatter.data['annotate-element']);
 
 		// trim whitespace from material content
 		var content = fileMatter.content.replace(/^(\s*(\r?\n|\r))+|(\s*(\r?\n|\r))+$/g, '');
@@ -333,7 +353,7 @@ var parseMaterials = function () {
 				name: toTitleCase(id),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
 				// annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
-				annotations: 'This is the defalut resoponse blah blach blach',
+				annotationText: (fileMatter.data['annotate-element']) ? annotate(fileMatter.data['annotate-element']) : '',
 				data: localData
 			};
 		} else {
@@ -342,7 +362,8 @@ var parseMaterials = function () {
 				name: toTitleCase(id.split('.')[1]),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
 				// annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
-				annotations: 'This is the defalut resoponse blah blach blach',
+				// annotations: 'This is the defalut resoponse blah blach blach',
+				annotationText: (fileMatter.data['annotate-element']) ? annotate(fileMatter.data['annotate-element']) : '',
 				data: localData
 			};
 		}
@@ -460,10 +481,15 @@ var parseData = function () {
 	// save content of each file
 	files.forEach(function (file) {
 		var id = getName(file);
+		var extension = file.split('.').pop(); 
+		if (extension === 'csv') {
+    	var content = yaml.safeLoad(fs.readFileSync(file, 'utf-8'));
+		}
 		var content = yaml.safeLoad(fs.readFileSync(file, 'utf-8'));
+		//Todo: Currently I have to manually convert the csv into json
+		// IT should be done automaticly here
 		assembly.data[id] = content;
 	});
-
 };
 
 
@@ -474,7 +500,7 @@ var parseViews = function () {
 
 	// reset
 	assembly.views = {};
-
+  
 	// get files
 	var files = globby.sync(options.views, { nodir: true });
 
@@ -487,7 +513,7 @@ var parseViews = function () {
 			collection = (dirname !== options.keys.views) ? dirname : '';
 
 		var fileMatter = getMatter(file),
-			fileData = _.omit(fileMatter.data, ['notes', 'annotations']);
+			fileData = _.omit(fileMatter.data, ['notes']);
 
 		// if this file is part of a collection
 		if (collection) {
@@ -503,13 +529,11 @@ var parseViews = function () {
 				name: toTitleCase(id),
 				data: fileData
 			};
-
 		}
 
 	});
 
 };
-
 
 /**
  * Register new Handlebars helpers
@@ -620,7 +644,6 @@ var assemble = function () {
 		// get page gray matter and content
 		var pageMatter = getMatter(file),
 			pageContent = pageMatter.content;
-
 		if (collection) {
 			pageMatter.data.baseurl = '..';
 		}
