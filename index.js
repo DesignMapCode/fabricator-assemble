@@ -332,7 +332,8 @@ var parseMaterials = function () {
 			assembly.materials[collection].items[key] = {
 				name: toTitleCase(id),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
-				annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
+				// annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
+				annotations: 'This is the defalut resoponse blah blach blach',
 				data: localData
 			};
 		} else {
@@ -340,7 +341,8 @@ var parseMaterials = function () {
 
 				name: toTitleCase(id.split('.')[1]),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
-				annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
+				// annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
+				annotations: 'This is the defalut resoponse blah blach blach',
 				data: localData
 			};
 		}
