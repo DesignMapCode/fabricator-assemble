@@ -271,7 +271,6 @@ var parseMaterials = function () {
 
 	// get files and dirs
 	var files = globby.sync(options.materials, { nodir: true, nosort: true });
-
 	// build a glob for identifying directories
 	options.materials = (typeof options.materials === 'string') ? [options.materials] : options.materials;
 	var dirsGlob = options.materials.map(function (pattern) {
@@ -319,27 +318,29 @@ var parseMaterials = function () {
 		var collection = getName(path.normalize(path.dirname(file)).split(path.sep).pop(), true);
 		var parent = path.normalize(path.dirname(file)).split(path.sep).slice(-2, -1)[0];
 		var isSubCollection = (dirs.indexOf(parent) > -1);
+
 		var id = (isSubCollection) ? getName(collection) + '.' + getName(file) : getName(file);
 		var key = (isSubCollection) ? collection + '.' + getName(file, true) : getName(file, true);
 
-		// get material front-matter, omit `notes`
-		var localData = _.omit(fileMatter.data, 'notes');
+		// get material front-matter, omit `notes` and `annotations`
+		var localData = _.omit(fileMatter.data, ['notes', 'annotations']);
 
 		// trim whitespace from material content
 		var content = fileMatter.content.replace(/^(\s*(\r?\n|\r))+|(\s*(\r?\n|\r))+$/g, '');
-
-
 		// capture meta data for the material
 		if (!isSubCollection) {
 			assembly.materials[collection].items[key] = {
 				name: toTitleCase(id),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
+				annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
 				data: localData
 			};
 		} else {
 			assembly.materials[parent].items[collection].items[key] = {
+
 				name: toTitleCase(id.split('.')[1]),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
+				annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
 				data: localData
 			};
 		}
@@ -364,7 +365,6 @@ var parseMaterials = function () {
 
 		// register the partial
 		Handlebars.registerPartial(id, content);
-
 	});
 
 
@@ -485,7 +485,7 @@ var parseViews = function () {
 			collection = (dirname !== options.keys.views) ? dirname : '';
 
 		var fileMatter = getMatter(file),
-			fileData = _.omit(fileMatter.data, 'notes');
+			fileData = _.omit(fileMatter.data, ['notes', 'annotations']);
 
 		// if this file is part of a collection
 		if (collection) {
