@@ -225,7 +225,7 @@ var buildContext = function (data, hash) {
 	// set keys to whatever is defined
 	var materials = {};
 	materials[options.keys.materials] = assembly.materials;
-
+	// console.log(JSON.stringify(assembly.materials));
 	var views = {};
 	views[options.keys.views] = assembly.views;
 
@@ -309,23 +309,39 @@ var parseMaterials = function () {
 
 	});
 
-	var annotate = function (element) {
-		var text = ''
-		if (element) {
-			// console.log(element,'el');
+	/*
+		Goal: create a function that will take the annotate-element 
+		and desired data type and return the data string.
+		@param1 string - key selector
+		@param2 string - Data Type 
+		@return string - content
+	*/
+	var getContent = function (element, dataType) {
+		if (!element) {return;}
+		switch (dataType) {
+    	case 'DESCRIPTION':
+    		return findContent(element, 'description');
+    		break;
+    	case 'ANNOTATION-HEADING':
+    		return findContent(element, 'annotation-heading');
+    		break;
+    	case 'ANNOTATION-DESCRIPTION':
+    		return findContent(element, 'annotation-description');
+    		break;
+    	default:
+    		return '';
+		}
+		function findContent (element, key) {
+			var text = '';
 			_.each(assembly.data.annotations, function(d) {
-				if (d.FIELD3 === element) {
-          // console.log(d.FIELD4);
-					text = d.FIELD4;
-					// return 'test';
+				if (d.name === element) {
+					text = d[key];
+				}else {
 				}
 			})
 			return text;
-		}else {
-			return '';
 		}
 	}
-
 
 	// iterate over each file (material)
 	files.forEach(function (file) {
@@ -352,18 +368,18 @@ var parseMaterials = function () {
 			assembly.materials[collection].items[key] = {
 				name: toTitleCase(id),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
-				// annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
-				annotationText: (fileMatter.data['annotate-element']) ? annotate(fileMatter.data['annotate-element']) : '',
+				description: (fileMatter.data['annotate-element']) ? getContent(fileMatter.data['annotate-element'], 'DESCRIPTION') : '',
+				annotationHeading: (fileMatter.data['annotate-element']) ? getContent(fileMatter.data['annotate-element'], 'ANNOTATION-HEADING') : '',
+				annotationDescription: (fileMatter.data['annotate-element']) ? getContent(fileMatter.data['annotate-element'], 'ANNOTATION-DESCRIPTION') : '',
 				data: localData
 			};
 		} else {
 			assembly.materials[parent].items[collection].items[key] = {
-
 				name: toTitleCase(id.split('.')[1]),
 				notes: (fileMatter.data.notes) ? md.render(fileMatter.data.notes) : '',
-				// annotations: (fileMatter.data.annotations) ? md.render(fileMatter.data.annotations) : '',
-				// annotations: 'This is the defalut resoponse blah blach blach',
-				annotationText: (fileMatter.data['annotate-element']) ? annotate(fileMatter.data['annotate-element']) : '',
+				description: (fileMatter.data['annotate-element']) ? getContent(fileMatter.data['annotate-element'], 'DESCRIPTION') : '',
+				annotationHeading: (fileMatter.data['annotate-element']) ? getContent(fileMatter.data['annotate-element'], 'ANNOTATION-HEADING') : '',
+				annotationDescription: (fileMatter.data['annotate-element']) ? getContent(fileMatter.data['annotate-element'], 'ANNOTATION-DESCRIPTION') : '',
 				data: localData
 			};
 		}
@@ -438,7 +454,6 @@ var parseLayouts = function () {
 
 	// get files
 	var files = globby.sync(options.layouts, { nodir: true });
-
 	// save content of each file
 	files.forEach(function (file) {
 		var id = getName(file);
@@ -616,7 +631,6 @@ var setup = function (userOptions) {
 	parseMaterials();
 	parseViews();
 	parseDocs();
-
 };
 
 

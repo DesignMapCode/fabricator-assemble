@@ -1,38 +1,16 @@
 [
  {
    "FIELD1": "",
-   "FIELD2": "Color",
-   "FIELD3": "Color Accessibility",
-   "FIELD4": "Color contrast\n(WCAG) 2.0 - https://www.w3.org/TR/WCAG20/\n- small text 4.5:1 \n- large text 3:1"
+   "name": "color-accessibility",
+   "description": "<p>\n  Color contrast (WCAG) 2.0 - https://www.w3.org/TR/WCAG20/  \n</p>\n<span>- small text 4.5:1</span>\n<span>- large text 3:1</span>",
+   "annotation-heading": "Color Contrast Checker",
+   "annotation-description": "<p>\n  There are various online and desktop tools, and plugins for Photoshop and Sketch to check color contrast level. Use these tools to make sure colors in your design are accessible.\n</p>\n<span><a href=\"http://webaim.org/resources/contrastchecker/\">WebAIM Color Contrast Checker</a></span>\n"
  },
  {
    "FIELD1": "",
-   "FIELD2": "",
-   "FIELD3": "Primary",
-   "FIELD4": "Primary colors represent the Trinet brand. Primary colors should consist of less than 10% of the color spectrum on the page at any given time. They are applied primarily to main interactive elements such as primary button and input form elements."
+   "name": "Primary",
+   "description": "<p>Primary colors represent the Trinet brand. They are bright and bold colors, and they should be used sparingly to draw attention and communicate visual hierarchy. They are used in main interactive elements such as the primary button and inputs. They are not intended to be used for large background areas.</p>",
+   "annotation-heading": "",
+   "annotation-description": ""
  },
- {
-   "FIELD1": "",
-   "FIELD2": "",
-   "FIELD3": "Secondary",
-   "FIELD4": "Secondary colors complement the primary colors. They are used as responses to user interaction such as hover states, or highlights  on information."
- },
- {
-   "FIELD1": "",
-   "FIELD2": "",
-   "FIELD3": "Status",
-   "FIELD4": "Status colors communicates status information. They can be used in text, icons, input elements border and banners."
- },
- {
-   "FIELD1": "",
-   "FIELD2": "",
-   "FIELD3": "Greys",
-   "FIELD4": "Greys should consist of 90% of the color spectrum on the page at any given time. They are applied primarily to background and text elements."
- },
- {
-   "FIELD1": "",
-   "FIELD2": "",
-   "FIELD3": "Gradients",
-   "FIELD4": "Gradients are used in charts instead of solid colors. Charts can use any number of gradients necessary. A chart legend or label should be included when more than one color are used."
- }
 ]
